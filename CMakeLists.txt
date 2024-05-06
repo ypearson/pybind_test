@@ -29,6 +29,16 @@ pybind11_add_module(pybind_test_module pybind_test_module_code.cpp)
 # Link the Python libraries to the module
 target_link_libraries(pybind_test_module PRIVATE Python::Python)
 
+pybind11_add_module(SomeObject_module SomeObject_module_code.cpp)
+
+# Link the Python libraries to the module
+target_link_libraries(SomeObject_module PRIVATE Python::Python)
+
+pybind11_add_module(worker_module BackgroundWorker_module_code.cpp)
+
+# Link the Python libraries to the module
+target_link_libraries(worker_module PRIVATE Python::Python)
+
 # -Ofast Optimization Level
 
 # -Ofast includes all the optimizations from -O3 and adds optimizations that are not standard-compliant,
