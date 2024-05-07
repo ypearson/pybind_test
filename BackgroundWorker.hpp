@@ -16,6 +16,7 @@ class BackgroundWorker {
   }
 
   ~BackgroundWorker() {
+    std::cout << "~BackgroundWorker()" << std::endl;
     stop_thread = true;
     if (worker.joinable()) {
       worker.request_stop();
