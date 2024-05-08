@@ -1,10 +1,35 @@
 import time
 import timeit
 import numpy as np
+from spatialmath import SE3
 
 import pybind_test_module
 import SomeObject_module
 import worker_module
+
+def compute_transform(object_common, reference_common):
+    return reference_common.inv() * object_common
+
+def test_spatialmath(n):
+    # Creating random SE3 transforms
+    object_common = [SE3.Rx(np.random.rand()) * SE3.Ry(np.random.rand()) * SE3.Tz(np.random.rand()) for _ in range(n)]
+    reference_common = [SE3.Rx(np.random.rand()) * SE3.Ry(np.random.rand()) * SE3.Tz(np.random.rand()) for _ in range(n)]
+    start_time = time.time()
+    _ = [compute_transform(obj, ref) for obj, ref in zip(object_common, reference_common)]
+    elapsed_time = time.time() - start_time
+    print(f"SpatialMath Time: {1000*elapsed_time} ms")
+    return elapsed_time
+
+def test_eigen(n):
+    # Generate random transformation matrices
+    objects = [pybind_test_module.se3_random() for _ in range(n)]
+    references = [pybind_test_module.se3_random() for _ in range(n)]
+    start_time = time.time()
+    _ = [pybind_test_module.compute_transform(obj, ref) for obj, ref in zip(objects, references)]
+    elapsed_time = time.time() - start_time
+    print(f"Eigen Time: {1000*elapsed_time} ms")
+    return elapsed_time
+
 
 # Create a large NumPy array to test
 arr = np.random.rand(10000,1000)
@@ -45,6 +70,10 @@ def test_functions():
     print("func_two_params(3, 4):", pybind_test_module.func_two_params(3, 4))
 
 if __name__ == "__main__":
+
+    n = 1000
+    test_spatialmath(n)
+    test_eigen(n)
 
     # Number of repetitions
     repetitions = 100

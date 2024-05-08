@@ -22,12 +22,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mtune=native -flto=au
 # Find Python and Pybind11 packages
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(pybind11 REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 # Define the module target
 pybind11_add_module(pybind_test_module pybind_test_module_code.cpp)
 
 # Link the Python libraries to the module
-target_link_libraries(pybind_test_module PRIVATE Python::Python)
+target_link_libraries(pybind_test_module PRIVATE Python::Python Eigen3::Eigen)
 
 pybind11_add_module(SomeObject_module SomeObject_module_code.cpp)
 
